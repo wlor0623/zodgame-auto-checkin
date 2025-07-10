@@ -4,17 +4,16 @@
 
 [![ZodGame-Auto-Checkin](https://github.com/ewigl/zodgame-auto-checkin/actions/workflows/Checkin.yml/badge.svg)](https://github.com/ewigl/zodgame-auto-checkin/actions/workflows/Checkin.yml)
 
-### 环境变量
+### 仓库变量
 
-- **Environments**: `ZODGAME`
-
-- **Secrets**:`COOKIE`, `FORMHASH`
+- **COOKIE**：cookie。
+- **FORMHASH**：document.querySelector('[name=formhash]').value。
 
 ### 使用方法
 
 1. Fork 此仓库。
-2. 在 fork 后的仓库中启用 Workflows。
-3. 配置环境变量。
+2. 在 fork 后的仓库中启用 Actions。
+3. 配置仓库变量。
 
 详细文档: https://ewigl.github.io/notes/posts/programming/github-actions/
 
