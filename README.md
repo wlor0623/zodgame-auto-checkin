@@ -6,8 +6,16 @@
 
 ### 仓库变量
 
-- **COOKIE**：cookie。
-- **FORMHASH**：document.querySelector('[name=formhash]').value。
+- **ACCOUNTS**：账户信息，**多个**账户配置示例如下。推荐使用 [JSON 格式化工具](https://jsoneditoronline.org/) 进行编辑以避免格式出错。
+
+  ```json
+  [
+    {
+      "name": "这里填写账户备注",
+      "cookie": "这里填写 Cookie"
+    }
+  ]
+  ```
 
 ### 使用方法
 
