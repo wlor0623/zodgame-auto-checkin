@@ -25,6 +25,14 @@ const baseHeaders = {
   "Referrer-Policy": "strict-origin-when-cross-origin",
 };
 
+function isCloudflareError(contentData) {
+  if (contentData.includes("520: Web server is returning an unknown error")) {
+    return true;
+  }
+
+  return false;
+}
+
 function checkIfSingInSuccess(data) {
   // console.log(`签到结果: ${data}`);
   if (data.includes("您今日已经签到，请明天再来！")) {
@@ -40,15 +48,15 @@ function checkIfSingInSuccess(data) {
     }
 
     return successMsg;
-  } else if (data.includes("520: Web server is returning an unknown error")) {
-    throw new Error("CloudFlare 错误，请稍后尝试重试。");
+  } else if (isCloudflareError(data)) {
+    throw new Error("CloudFlare 错误，请稍后重试。");
   } else {
     throw new Error(data);
   }
 }
 
 async function checkIn(account) {
-  console.log(`【${account.name}】: 正在签到...`);
+  console.log(`${account.name}: 正在签到...`);
 
   const response = await fetch(CHECKIN_URL, {
     headers: {
@@ -67,7 +75,7 @@ async function checkIn(account) {
 }
 
 async function getFormHash(account) {
-  console.log(`【${account.name}】: 正在获取 Formhash...`);
+  console.log(`${account.name}: 正在获取 Formhash...`);
 
   const response = await fetch(
     "https://zodgame.xyz/plugin.php?id=dsu_paulsign:sign",
@@ -81,13 +89,17 @@ async function getFormHash(account) {
 
   const data = await response.text();
 
+  if (isCloudflareError(data)) {
+    throw new Error("CloudFlare 错误，请稍后重试。");
+  }
+
   // 提取 formhash
   const formhashMatch = data.match(/name="formhash" value="([a-z0-9]+)"/);
   if (!formhashMatch || formhashMatch.length < 2) {
-    throw new Error("获取 Formhash 失败，请检查 cookie 是否正确。");
+    throw new Error("Formhash 获取失败。");
   }
 
-  console.log(`【${account.name}】: Formhash 获取成功`);
+  console.log(`${account.name}: Formhash 获取成功`);
 
   return {
     ...account,
@@ -128,9 +140,9 @@ async function main() {
   results.forEach((result, index) => {
     const accountName = accounts[index].name;
     if (result.status === "fulfilled") {
-      console.log(`【${accountName}】: ✅ ${result.value}`);
+      console.log(`${accountName}: ✅ ${result.value}`);
     } else {
-      console.error(`【${accountName}】: ❌ ${result.reason.message}`);
+      console.error(`${accountName}: ❌ ${result.reason.message}`);
     }
   });
 }
