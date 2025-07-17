@@ -25,6 +25,7 @@ jobs:
           node-version: latest
 
       - name: Checkin
+        id: checkin
         shell: bash
         run: |
           node main.js
