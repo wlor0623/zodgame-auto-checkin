@@ -1,6 +1,6 @@
 ## ZodGame 定时自动签到
 
-利用 Github Actions 定时任务实现自动签到。随机心情。
+利用 Github Actions 定时任务实现自动签到。随机心情，支持多账户，支持 Telegram 通知。
 
 [![ZodGame-Auto-Checkin](https://github.com/ewigl/zodgame-auto-checkin/actions/workflows/Checkin.yml/badge.svg)](https://github.com/ewigl/zodgame-auto-checkin/actions/workflows/Checkin.yml)
 
@@ -20,6 +20,9 @@
     }
   ]
   ```
+
+- **TELEGRAM_TOKEN**: （可选）Telegram 通知的 Bot Token。
+- **TELEGRAM_TO**: （可选）Telegram 通知的 Chat ID。
 
 ### 使用方法
 
