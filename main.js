@@ -1,3 +1,5 @@
+import { appendFileSync } from "fs";
+
 // POST 请求固定 URL
 const SIGN_IN_PAGE_URL = "https://zodgame.xyz/plugin.php?id=dsu_paulsign:sign";
 const CHECKIN_URL = SIGN_IN_PAGE_URL + "&operation=qiandao&infloat=1&inajax=1";
@@ -116,35 +118,51 @@ async function processSingleAccount(account) {
   return checkInResult;
 }
 
+function setGitHubOutput(name, value) {
+  appendFileSync(process.env.GITHUB_OUTPUT, `${name}<<EOF\n${value}\nEOF\n`);
+}
+
 // 入口
 async function main() {
   let accounts;
 
-  if (process.env.ACCOUNTS) {
-    try {
-      accounts = JSON.parse(process.env.ACCOUNTS);
-    } catch (error) {
-      console.log("❌ 账户信息配置格式错误。");
-      process.exit(1);
+  try {
+    if (!process.env.ACCOUNTS) {
+      throw new Error("❌ 未配置账户信息。");
     }
-  } else {
-    console.log("❌ 未配置账户信息。");
+
+    accounts = JSON.parse(process.env.ACCOUNTS);
+  } catch (error) {
+    const message = `❌ ${
+      error.message.includes("JSON") ? "账户信息配置格式错误。" : error.message
+    }`;
+    console.error(message);
+    setGitHubOutput("result", message);
     process.exit(1);
   }
 
   const allPromises = accounts.map((account) => processSingleAccount(account));
   const results = await Promise.allSettled(allPromises);
 
-  console.log(`\n======== 签到结果 ========\n`);
+  console.log("\n======== 签到结果 ========\n");
 
-  results.forEach((result, index) => {
+  const resultLines = results.map((result, index) => {
     const accountName = accounts[index].name;
-    if (result.status === "fulfilled") {
-      console.log(`${accountName}: ✅ ${result.value}`);
-    } else {
-      console.error(`${accountName}: ❌ ${result.reason.message}`);
-    }
+
+    const isSuccess = result.status === "fulfilled";
+    const icon = isSuccess ? "✅" : "❌";
+    const message = isSuccess ? result.value : result.reason.message;
+
+    const line = `${accountName}: ${icon} ${message}`;
+
+    isSuccess ? console.log(line) : console.error(line);
+
+    return line;
   });
+
+  const resultMsg = resultLines.join("\n");
+
+  setGitHubOutput("result", resultMsg);
 }
 
 main();

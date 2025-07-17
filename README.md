@@ -6,7 +6,7 @@
 
 ### 仓库变量
 
-- **ACCOUNTS**：账户信息，**多个**账户配置示例如下。推荐使用 [JSON 格式化工具](https://jsoneditoronline.org/) 进行编辑以避免格式出错。
+- **ACCOUNTS**：账户信息，配置格式如下。推荐使用 [JSON 格式化工具](https://jsoneditoronline.org/) 进行编辑以避免格式出错。
 
   ```json
   [
@@ -15,8 +15,8 @@
       "cookie": "这里填写 Cookie"
     },
     {
-      "name": "这里填写账户2备注",
-      "cookie": "这里填写 Cookie"
+      "name": "这里填写账户备注,只有一个账号可以删除这一条{}记录",
+      "cookie": "这里填写 Cookie，有两个以上账号自行在下方添加新的{}记录。"
     }
   ]
   ```
