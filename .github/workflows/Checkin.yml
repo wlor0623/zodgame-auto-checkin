@@ -6,7 +6,7 @@ on:
     # Expect: UTC+8 07:33 ~ 08:00
     # - cron: "33 23 * * *"
     # Expect: UTC+8 20:34 ~ 21:00
-    - cron: "34 12 * * *"
+    - cron: "21 11 * * *"
 
 jobs:
   checkin:
